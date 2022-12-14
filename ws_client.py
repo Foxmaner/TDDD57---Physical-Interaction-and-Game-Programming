@@ -1,10 +1,7 @@
-# WebSocket Client
 import websockets
+url = "ws://127.0.0.1:5000"
 
-ws_address = "ws://127.0.0.1:5000"
-
-# Send message
-async def send(message):
-    async with websockets.connect(ws_address) as websocket:
-        await websocket.send(str(message))
+async def send(msg):
+    async with websockets.connect(url) as websocket:
+        await websocket.send(str(msg))
         await websocket.recv()

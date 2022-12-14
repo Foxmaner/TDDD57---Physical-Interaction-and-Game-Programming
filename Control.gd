@@ -17,9 +17,8 @@ func _process(_delta):
 var dict = null
 func _on_data_recieved(): 
 	var payload = client.get_peer(1).get_packet().get_string_from_utf8()
-	dict = JSON.parse(payload) 
-	if typeof(dict.result) == TYPE_ARRAY:
-		$TextEdit2.text = str(dict.result)
+	var dict = JSON.parse(payload)
+	$TextEdit2.text = str(dict.result)
 	
 	
 func send(data): 

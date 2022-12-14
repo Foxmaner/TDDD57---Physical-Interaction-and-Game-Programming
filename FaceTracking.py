@@ -4,6 +4,9 @@ import mediapipe as mp
 import time
 import json 
 import asyncio
+from google.protobuf.json_format import MessageToJson
+
+#To senda data to broadcast server that GODOT listens to
 import ws_client
 
 # Init FaceMesh
@@ -28,7 +31,7 @@ with mp_face_mesh.FaceMesh(
 
     # Flip the image horizontally for a later selfie-view display, and convert
     # the BGR image to RGB.
-#    image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
+    image = cv2.flip(image, 1)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # To improve performance, optionally mark the image as not writeable to
     # pass by reference.
@@ -43,16 +46,7 @@ with mp_face_mesh.FaceMesh(
 
     if results.multi_face_landmarks:
       for face_landmarks in results.multi_face_landmarks:
-        keypoints = []
-        for data_point in face_landmarks.landmark:
-          keypoints.append({
-                          'X': data_point.x,
-                          'Y': data_point.y,
-                          'Z': data_point.z,
-                          'Visibility': data_point.visibility,
-                          })
-
-        msg = json.dumps(keypoints)
+        msg = MessageToJson(face_landmarks)
         # Send data to ws server
         try:
           asyncio.run(ws_client.send(msg))
