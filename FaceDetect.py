@@ -42,6 +42,7 @@ with mp_face_detection.FaceDetection(
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
     if results.detections:
+      data = {}
       for detection in results.detections:
         msg = MessageToJson(detection)
         try:
