@@ -48,15 +48,18 @@ with mp_pose.Pose(
         except ConnectionRefusedError:
           print('WS Server is down')
 
+              
         mp_drawing.draw_landmarks(
             image,
             results.pose_landmarks,
             mp_pose.POSE_CONNECTIONS,
             landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+        
     # Flip the image horizontally for a selfie-view display.
     currTime = time.time()
     fps = 1 / (currTime - prevTime)
     prevTime = currTime
+#    print(fps)
     cv2.putText(image, f'FPS: {int(fps)}', (20, 70), cv2.FONT_HERSHEY_PLAIN, 3, (0, 196, 255), 2)
     cv2.imshow('MediaPipe Pose', image)
     if cv2.waitKey(5) & 0xFF == 27:
