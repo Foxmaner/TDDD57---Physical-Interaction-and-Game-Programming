@@ -45,6 +45,8 @@ with mp_face_detection.FaceDetection(
       data = {}
       for detection in results.detections:
         msg = MessageToJson(detection)
+        msg2 = {"Type": "FACE_DETECT", "DATA": json.loads(msg)}
+        msg = json.dumps(msg2)
         try:
 #          print(msg)
           asyncio.run(ws_client.send(msg))

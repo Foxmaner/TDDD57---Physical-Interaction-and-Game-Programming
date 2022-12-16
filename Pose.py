@@ -41,6 +41,8 @@ with mp_pose.Pose(
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
     if results.pose_landmarks: 
         msg = MessageToJson(results.pose_landmarks)
+        msg2 = {"Type": "FACE_DETECT", "DATA": json.loads(msg)}
+        msg = json.dumps(msg2)
         #How to get more than one hand ...
         try:
 #          print(msg)

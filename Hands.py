@@ -45,6 +45,8 @@ with mp_hands.Hands(
     if results.multi_hand_landmarks:
       for hand_landmarks in results.multi_hand_landmarks:
         msg = MessageToJson(hand_landmarks)
+        msg2 = {"Type": "FACE_DETECT", "DATA": json.loads(msg)}
+        msg = json.dumps(msg2)
         #How to get more than one hand ...
         try:
 #          print(msg)

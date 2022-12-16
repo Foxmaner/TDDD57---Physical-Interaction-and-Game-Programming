@@ -46,8 +46,11 @@ with mp_face_mesh.FaceMesh(
 
     if results.multi_face_landmarks:
       for face_landmarks in results.multi_face_landmarks:
-        msg = MessageToJson(face_landmarks)
-        # Send data to ws server
+        
+        msg = MessageToJson(face_landmarks) 
+        msg2 = {"Type": "FACE_TRACK", "DATA": json.loads(msg)}
+        msg = json.dumps(msg2)
+            # Send data to ws server
         try:
           asyncio.run(ws_client.send(msg))
         except ConnectionRefusedError:

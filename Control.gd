@@ -18,6 +18,8 @@ var dict = null
 func _on_data_recieved(): 
 	var payload = client.get_peer(1).get_packet().get_string_from_utf8()
 	var dict = JSON.parse(payload)
+	#Depending on the dict, the TYPE: varable will be FACE_DETECT, FACE_TRACK, POSE, HANDS and then the data will be in "DATA" key
+	#e.g. dict.DATA == "FACE_TRACK"
 	$TextEdit2.text = str(dict.result)
 	
 	
