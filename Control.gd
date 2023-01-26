@@ -17,15 +17,23 @@ func _process(_delta):
 	
 var dict = null
 
+
+#Function returns true if hand is closed
 func isHandClosed(handData):
 	var middleFingerTop = handData[12]
 	var middleFingerRoot = handData[9]
+	var handRoot = handData[0]
 	
-	if(middleFingerTop["y"]>middleFingerRoot["y"]):
+	var handToFingerTop = Vector2(handRoot["x"]-middleFingerTop["x"],handRoot["y"]-middleFingerTop["y"])
+	var handToFingerRoot = Vector2(handRoot["x"]-middleFingerRoot["x"],handRoot["y"]-middleFingerRoot["y"])
+	print(str(handToFingerRoot.length())  + ">" + str(handToFingerTop.length()))
+	
+	if(handToFingerRoot.length() > handToFingerTop.length()*1.3):
 		return true
 	else:
 		return false
 
+#return a vector of where the hand is relative to the screen
 func getHandPositionRelative(x,y):
 	return Vector2(x*get_viewport().size.x,y*get_viewport().size.y)
 
@@ -37,11 +45,11 @@ func _on_data_recieved():
 	#e.g. dict.DATA == "FACE_TRACK"
 	$TextEdit2.text = str(dict.result["DATA"]["landmark"][1])
 	
-	var handposition = getHandPositionRelative(dict.result["DATA"]["landmark"][1]["x"],dict.result["DATA"]["landmark"][1]["y"])
-	
-	
+	#Change position of sprite icon
+	var handposition = getHandPositionRelative(dict.result["DATA"]["landmark"][9]["x"],dict.result["DATA"]["landmark"][9]["y"])
 	handIcon.position = handposition
 	
+	#Change color of hand if its closed
 	if(isHandClosed(dict.result["DATA"]["landmark"])):
 		handIcon.modulate = Color(0,0,1)
 	else:
