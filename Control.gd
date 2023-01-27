@@ -40,11 +40,18 @@ func isHandClosed(handData):
 	var handToFingerTop = Vector2(handRoot["x"]-middleFingerTop["x"],handRoot["y"]-middleFingerTop["y"])
 	var handToFingerRoot = Vector2(handRoot["x"]-middleFingerRoot["x"],handRoot["y"]-middleFingerRoot["y"])
 	#print(str(handToFingerRoot.length())  + ">" + str(handToFingerTop.length()))
-	
-	if(handToFingerRoot.length() > handToFingerTop.length()*1.1):
-		return true
-	else:
-		return false
+	if(handClosed):
+		#If hand was originaly closed
+		if(handToFingerRoot.length()*1.5 < handToFingerTop.length()):
+			return false
+		else:
+			return true
+	else:	
+		#If hand was originaly open
+		if(handToFingerRoot.length() > handToFingerTop.length()*1.1):
+			return true
+		else:
+			return false
 
 #return a vector of where the hand is relative to the screen
 func getHandPositionRelative(x,y):
