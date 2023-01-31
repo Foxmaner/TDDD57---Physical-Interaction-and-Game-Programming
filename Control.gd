@@ -8,6 +8,8 @@ onready var boxArea = $BoxArea
 var openHand = preload("res://pics/open_hand.png")
 var closedHand = preload("res://pics/closed_hand.png")
 
+var lastUpdateHand = 0
+
 
 #Load in with standard values
 var openHandAverage = [false,false,false,false,false]
@@ -26,10 +28,16 @@ func _ready():
 		
 func _process(_delta):
 	client.poll()
+	#Sets how long to wait before the track counts as gone
+	var c = 100
+	if(lastUpdateHand + c < OS.get_ticks_msec()):
+		handIcon.modulate = Color(0.5,0.5,0.5,0.5)
+	
+		
 	
 func _physics_process(delta):
 	if(handClosed && isHandOnBox):
-		print("TRUUUE!")
+		
 		boxArea.position = handArea.position
 	pass
 	
@@ -95,8 +103,24 @@ func isHandClosed(handData):
 func getHandPositionRelative(x,y):
 	return Vector2(x*get_viewport().size.x,y*get_viewport().size.y)
 
+#returns true if the whole hand points against the camera
+func isHandInBadPosition(handData):
+	var middleFingerRoot = handData[9];
+	var handRoot = handData[0]
+	var thumbRoot = handData[2]
+	
+	var handToMiddleFingerRoot = Vector2(middleFingerRoot["x"]- handRoot["x"],middleFingerRoot["y"]-handRoot["y"])
+	var handToThumbRoot = Vector2(thumbRoot["x"]- handRoot["x"],thumbRoot["y"]-handRoot["y"])
+	
+	print(handToMiddleFingerRoot.length()/handToThumbRoot.length())
+	if(handToMiddleFingerRoot.length()<handToThumbRoot.length()):
+		return true
+	else:
+		return false
 	
 func _on_data_recieved(): 
+	lastUpdateHand = OS.get_ticks_msec();
+	
 	var payload = client.get_peer(1).get_packet().get_string_from_utf8()
 	var dict = JSON.parse(payload)
 	#Depending on the dict, the TYPE: varable will be FACE_DETECT, FACE_TRACK, POSE, HANDS and then the data will be in "DATA" key
@@ -110,14 +134,19 @@ func _on_data_recieved():
 	
 	handArea.position = getAveragePosition()
 	
-	#Change color of hand if its closed
-	if(getOpenHandAverage()):
-		handIcon.texture = closedHand;
-		handClosed = true;
-		
+	if(isHandInBadPosition(dict.result["DATA"]["landmark"])):
+		handIcon.modulate = Color(1,0,0,0.5)
 	else:
-		handIcon.texture = openHand;
-		handClosed = false;
+		handIcon.modulate = Color(1,1,1,1)
+		#Change color of hand if its closed
+		if(getOpenHandAverage()):
+			handIcon.texture = closedHand;
+			handClosed = true;
+			
+		else:
+			handIcon.texture = openHand;
+			handClosed = false;
+	
 	
 	
 	
