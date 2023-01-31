@@ -8,6 +8,11 @@ onready var boxArea = $BoxArea
 var openHand = preload("res://pics/open_hand.png")
 var closedHand = preload("res://pics/closed_hand.png")
 
+
+#Load in with standard values
+var openHandAverage = [false,false,false,false,false]
+var positionHandAverage = [Vector2(0,0),Vector2(0,0),Vector2(0,0),Vector2(0,0),Vector2(0,0)]
+
 var isHandOnBox = false
 var handClosed = false
 
@@ -29,6 +34,39 @@ func _physics_process(delta):
 	pass
 	
 var dict = null
+
+
+#Pushes new data to the average array
+func updateAverage(handData):
+	var newestHandPosition = getHandPositionRelative(handData[9]["x"],handData[9]["y"])
+	var newestIsHandClosed = isHandClosed(handData)
+	
+	openHandAverage.pop_back();
+	positionHandAverage.pop_back();
+	
+	positionHandAverage.push_front(newestHandPosition)
+	openHandAverage.push_front(newestIsHandClosed)
+	
+func getAveragePosition():
+	var averageVector = Vector2(0,0)
+	
+	for n in positionHandAverage:
+		averageVector += n
+	
+	return averageVector/positionHandAverage.size()
+	
+func getOpenHandAverage():
+	var nrOfOpenHands = 0
+	
+	for n in openHandAverage:
+		if(n):
+			nrOfOpenHands +=1
+	if(nrOfOpenHands > 2):
+		return true
+	else: 
+		return false
+	
+		
 
 
 #Function returns true if hand is closed
@@ -65,12 +103,15 @@ func _on_data_recieved():
 	#e.g. dict.DATA == "FACE_TRACK"
 	$TextEdit2.text = str(dict.result["DATA"]["landmark"][1])
 	
+	updateAverage(dict.result["DATA"]["landmark"])
+	
+	
 	#Change position of sprite icon
-	var handposition = getHandPositionRelative(dict.result["DATA"]["landmark"][9]["x"],dict.result["DATA"]["landmark"][9]["y"])
-	handArea.position = handposition
+	
+	handArea.position = getAveragePosition()
 	
 	#Change color of hand if its closed
-	if(isHandClosed(dict.result["DATA"]["landmark"])):
+	if(getOpenHandAverage()):
 		handIcon.texture = closedHand;
 		handClosed = true;
 		
