@@ -9,7 +9,8 @@ var tiltHeadRaw = 0
 
 var pitchHead = "Neutral"
 var pitchPositions = ["Up", "Neutral", "Down"]
-var pitchHeadRaw = 0
+var pitchHeadLeftEar = 0
+var pitchHeadRightEar = 0
 
 var mouthOpen = "Closed"
 var mouthPositions = ["Closed", "Open"]
@@ -29,16 +30,25 @@ func discreetTilt(rawTilt):
 		
 # -1 = up, 0 = neutral, 1 down
 func discreetPitch(rawPitch):
-	if (rawPitch < 10):
+	
+	if (rawPitch > -10):
 		return -1
-	elif (rawPitch > 50):
+	elif (rawPitch < -40):
 		return 1
 	else:
 		return 0
+	"""
+	if (rawPitch > 0):
+		return -1
+	elif (rawPitch > -70):
+		return 1
+	else:
+		return 0
+	"""
 		
 # 0 = closed, 1 = open
 func discreetMouth(rawMouth):
-	if (rawMouth < 30):
+	if (rawMouth < 40):
 		return 0
 	else:
 		return 1
@@ -66,9 +76,17 @@ func isMouthOpen(faceLandMarks):
 	mouthOpenRaw = rad2deg(topLip.angle_to(buttomLip))
 	
 func headPitch(faceLandMarks):
+	"""
 	var vectorEarToEar = faceLandMarks["leftEar"]-faceLandMarks["rightEar"]
 	var vectorEarToNose = faceLandMarks["leftEar"]-faceLandMarks["noseTip"]
 	pitchHeadRaw = rad2deg(vectorEarToEar.angle_to(vectorEarToNose))
+	"""
+	var vectorNoseLeftEar = faceLandMarks["leftEar"] - faceLandMarks["noseTip"]
+	var vectorNoseRightEar = faceLandMarks["rightEar"] - faceLandMarks["noseTip"]
+	var vectorBetweenEars = faceLandMarks["leftEar"] - faceLandMarks["rightEar"]
+	
+	pitchHeadLeftEar = rad2deg(vectorNoseLeftEar.angle_to(vectorBetweenEars))
+	pitchHeadRightEar = -rad2deg(vectorNoseRightEar.angle_to(-vectorBetweenEars))
 	
 func headTilt(faceLandMarks):
 	var vectorTopToButtomHead = faceLandMarks["topHead"]-faceLandMarks["bottomHead"]
@@ -92,7 +110,7 @@ func _on_data_recieved():
 	#Depending on the dict, the TYPE: varable will be FACE_DETECT, FACE_TRACK, POSE, HANDS and then the data will be in "DATA" key
 	#e.g. dict.DATA == "FACE_TRACK"
 	#Write out facePositions
-	var output = "Tilt: %s (%s) \nPitch: %s (%s) \nMouth: %s (%s) \n"% [tiltHead, tiltHeadRaw, pitchHead, pitchHeadRaw,mouthOpen,mouthOpenRaw]
+	var output = "Tilt: %s (%s) \nPitch: %s (%s, %s) \nMouth: %s (%s) \n" % [tiltHead, tiltHeadRaw, pitchHead, pitchHeadLeftEar, pitchHeadRightEar,mouthOpen,mouthOpenRaw]
 	$TextEdit2.text = str(output)
 	#Create a dict with relevant landmarks
 	createLandmarks(dict)
@@ -102,8 +120,13 @@ func _on_data_recieved():
 	headTilt(faceLandMarks)
 	
 	tiltHead = tiltPositions[discreetTilt(tiltHeadRaw) + 1]
-	pitchHead = pitchPositions[discreetPitch(pitchHeadRaw) + 1]
 	mouthOpen = mouthPositions[discreetMouth(mouthOpenRaw)]
+	
+	var pitch = discreetPitch(pitchHeadLeftEar)
+	if (pitch == discreetPitch(pitchHeadRightEar)):
+		pitchHead = pitchPositions[pitch + 1]
+	else:
+		pitchHead = "CONFLICT"
 	
 func send(data): 
 	client.get_peer(1).put_packet(JSON.print(data).to_utf8())
