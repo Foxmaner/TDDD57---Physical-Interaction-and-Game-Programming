@@ -3,44 +3,76 @@ extends Control
 var client = WebSocketClient.new()
 var url = "ws://localhost:5000"
 
-var tiltHead = "Left"
+var tiltHead = "Neutral"
+var tiltPositions = ["Right", "Neutral", "Left"]
 var tiltHeadRaw = 0
-var pitchHead = "Up"
+
+var pitchHead = "Neutral"
+var pitchPositions = ["Up", "Neutral", "Down"]
 var pitchHeadRaw = 0
+
 var mouthOpen = "Closed"
+var mouthPositions = ["Closed", "Open"]
 var mouthOpenRaw = 0
+
 
 var faceLandMarks = {}
 
+# -1 = right, 0 = neutral, 1 left
+func discreetTilt(rawTilt):
+	if (rawTilt < -10):
+		return -1
+	elif (rawTilt > 10):
+		return 1
+	else:
+		return 0
+		
+# -1 = up, 0 = neutral, 1 down
+func discreetPitch(rawPitch):
+	if (rawPitch < 10):
+		return -1
+	elif (rawPitch > 50):
+		return 1
+	else:
+		return 0
+		
+# 0 = closed, 1 = open
+func discreetMouth(rawMouth):
+	if (rawMouth < 30):
+		return 0
+	else:
+		return 1
 
 func createLandmarks(faceData):
 	var allLandmarks = faceData.result["DATA"]["landmark"]
-	faceLandMarks["topHead"] = Vector2(allLandmarks[10]["x"],allLandmarks[10]["y"])
-	faceLandMarks["bottomHead"] = Vector2(allLandmarks[152]["x"],allLandmarks[152]["y"])
-	faceLandMarks["topLip"] = Vector2(allLandmarks[13]["x"],allLandmarks[13]["y"])
-	faceLandMarks["bottumLip"] = Vector2(allLandmarks[14]["x"],allLandmarks[14]["y"])
-	faceLandMarks["leftMouth"] = Vector2(allLandmarks[78]["x"],allLandmarks[78]["y"])
-	faceLandMarks["rightMouth"] = Vector2(allLandmarks[308]["x"],allLandmarks[308]["y"])
-	faceLandMarks["rightEar"] = Vector2(allLandmarks[454]["x"],allLandmarks[454]["y"])
-	faceLandMarks["leftEar"] = Vector2(allLandmarks[234]["x"],allLandmarks[234]["y"])
-	faceLandMarks["noseTip"] = Vector2(allLandmarks[94]["x"],allLandmarks[94]["y"])
+	faceLandMarks["topHead"] = extractVector2(allLandmarks[10])
+	faceLandMarks["bottomHead"] = extractVector2(allLandmarks[152])
+	faceLandMarks["topLip"] = extractVector2(allLandmarks[13])
+	faceLandMarks["bottumLip"] = extractVector2(allLandmarks[14])
+	faceLandMarks["leftMouth"] = extractVector2(allLandmarks[78])
+	faceLandMarks["rightMouth"] = extractVector2(allLandmarks[308])
+	faceLandMarks["rightEar"] = extractVector2(allLandmarks[454])
+	faceLandMarks["leftEar"] = extractVector2(allLandmarks[234])
+	faceLandMarks["noseTip"] = extractVector2(allLandmarks[94])
+	
+func extractVector2(landmark):
+	return Vector2(landmark["x"], landmark["y"])
 
 func isMouthOpen(faceLandMarks):
 	var vectorLeftMothToLip = faceLandMarks["bottumLip"]-faceLandMarks["topLip"]
 	#print(str(vectorLeftMothToLip.length()))
 	var topLip = faceLandMarks["topLip"]-faceLandMarks["leftMouth"]
 	var buttomLip = faceLandMarks["bottumLip"]-faceLandMarks["leftMouth"]
-	mouthOpenRaw = topLip.angle_to(buttomLip)
-	print(str(topLip.angle_to(buttomLip)))
+	mouthOpenRaw = rad2deg(topLip.angle_to(buttomLip))
 	
 func headPitch(faceLandMarks):
 	var vectorEarToEar = faceLandMarks["leftEar"]-faceLandMarks["rightEar"]
 	var vectorEarToNose = faceLandMarks["leftEar"]-faceLandMarks["noseTip"]
-	pitchHeadRaw = vectorEarToEar.angle_to(vectorEarToNose)
+	pitchHeadRaw = rad2deg(vectorEarToEar.angle_to(vectorEarToNose))
 	
 func headTilt(faceLandMarks):
 	var vectorTopToButtomHead = faceLandMarks["topHead"]-faceLandMarks["bottomHead"]
-	tiltHeadRaw = vectorTopToButtomHead.angle_to(Vector2.UP)
+	tiltHeadRaw = rad2deg(vectorTopToButtomHead.angle_to(Vector2.UP))
 
 func _ready():
 	client.connect("data_received", self, "_on_data_recieved")
@@ -69,6 +101,9 @@ func _on_data_recieved():
 	headPitch(faceLandMarks)
 	headTilt(faceLandMarks)
 	
+	tiltHead = tiltPositions[discreetTilt(tiltHeadRaw) + 1]
+	pitchHead = pitchPositions[discreetPitch(pitchHeadRaw) + 1]
+	mouthOpen = mouthPositions[discreetMouth(mouthOpenRaw)]
 	
 func send(data): 
 	client.get_peer(1).put_packet(JSON.print(data).to_utf8())
