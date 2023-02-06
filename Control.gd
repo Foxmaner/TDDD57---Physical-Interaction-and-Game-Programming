@@ -1,5 +1,11 @@
 extends Control
 
+var faceClosedIcon = preload("res://pics/faceClosed.png")
+var faceOpenIcon = preload("res://pics/faceOpen.png")
+onready var pointerArea = $PointerArea
+onready var boxArea = $BoxArea
+
+onready var pointerSprite = $PointerArea/Sprite
 var client = WebSocketClient.new()
 var url = "ws://localhost:5000"
 
@@ -16,6 +22,12 @@ var mouthOpen = "Closed"
 var mouthPositions = ["Closed", "Open"]
 var mouthOpenRaw = 0
 
+var haveGrabbed = false
+
+var offset = Vector2(0,0)
+
+
+var isPointerOnBox = false
 
 var faceLandMarks = {}
 
@@ -101,7 +113,33 @@ func _ready():
 		print("Unable to connect")
 		
 func _process(_delta):
+	
+	if(mouthOpen=="Closed" && isPointerOnBox):
+		if(haveGrabbed==false):
+			offset = Vector2(boxArea.position-pointerArea.position)	
+			haveGrabbed = true
+		
+		boxArea.position = pointerArea.position+offset
+	else:
+		haveGrabbed=false
 	client.poll()
+
+func _physics_process(delta):
+	#See which way the head is pointed
+	if(tiltHead == "Right"):
+		print("Riight")
+		pointerArea.position.x += 1
+		
+	elif(tiltHead == "Left"):
+		print("LEEFT")
+		pointerArea.position.x -= 1
+	
+	if(pitchHead == "Up"):
+		print("Up!")
+		pointerArea.position.y -= 1
+	elif(pitchHead == "Down"):
+		pointerArea.position.y += 1
+		print("Down!")
 	
 var dict = null
 func _on_data_recieved(): 
@@ -119,8 +157,18 @@ func _on_data_recieved():
 	headPitch(faceLandMarks)
 	headTilt(faceLandMarks)
 	
+	
+	
 	tiltHead = tiltPositions[discreetTilt(tiltHeadRaw) + 1]
 	mouthOpen = mouthPositions[discreetMouth(mouthOpenRaw)]
+	
+	if(mouthOpen=="Open"):
+		pointerSprite.texture = faceOpenIcon
+		
+	elif(mouthOpen =="Closed"):
+		pointerSprite.texture = faceClosedIcon
+		
+		
 	
 	var pitch = discreetPitch(pitchHeadLeftEar)
 	if (pitch == discreetPitch(pitchHeadRightEar)):
@@ -135,3 +183,18 @@ func send(data):
 func _on_Button_pressed():
 	send($TextEdit.text)
 	
+
+
+
+
+
+func _on_PointerArea_area_entered(area):
+	
+	isPointerOnBox = true
+	pass # Replace with function body.
+
+
+func _on_PointerArea_area_exited(area):
+	
+	isPointerOnBox = false
+	pass # Replace with function body.

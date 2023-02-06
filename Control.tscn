@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Control.gd" type="Script" id=1]
+[ext_resource path="res://pics/faceOpen.png" type="Texture" id=2]
+[ext_resource path="res://icon.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 9.375, 9.25 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 32, 32 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -13,3 +21,26 @@ margin_top = 21.0
 margin_right = 820.0
 margin_bottom = 543.0
 wrap_enabled = true
+
+[node name="PointerArea" type="Area2D" parent="."]
+position = Vector2( 400, 400 )
+
+[node name="Sprite" type="Sprite" parent="PointerArea"]
+scale = Vector2( 0.15, 0.15 )
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PointerArea"]
+scale = Vector2( 4, 4 )
+shape = SubResource( 1 )
+
+[node name="BoxArea" type="Area2D" parent="."]
+position = Vector2( 300, 200 )
+
+[node name="Sprite" type="Sprite" parent="BoxArea"]
+texture = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BoxArea"]
+shape = SubResource( 2 )
+
+[connection signal="area_entered" from="PointerArea" to="." method="_on_PointerArea_area_entered"]
+[connection signal="area_exited" from="PointerArea" to="." method="_on_PointerArea_area_exited"]
