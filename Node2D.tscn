@@ -1,4 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://projectScript.gd" type="Script" id=1]
+[ext_resource path="res://BodyInterpreter.gd" type="Script" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 10.2956
@@ -13,19 +16,20 @@ extents = Vector2( 1, 142.75 )
 extents = Vector2( 255.516, 1.37501 )
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource( 1 )
 
-[node name="RigidBody2D" type="RigidBody2D" parent="."]
+[node name="BallBody" type="RigidBody2D" parent="."]
 position = Vector2( 558, 493 )
 rotation = 1.5708
 
-[node name="ColorRect" type="ColorRect" parent="RigidBody2D"]
+[node name="ColorRect" type="ColorRect" parent="BallBody"]
 margin_left = -10.0
 margin_top = -10.0
 margin_right = 10.0
 margin_bottom = 10.0
 color = Color( 1, 0, 0, 1 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BallBody"]
 shape = SubResource( 1 )
 
 [node name="Walls" type="StaticBody2D" parent="."]
@@ -67,7 +71,6 @@ margin_bottom = 3.0
 color = Color( 1, 0, 0, 1 )
 
 [node name="LeftWallCollision" type="CollisionShape2D" parent="Walls"]
-modulate = Color( 0.878431, 0.870588, 0.247059, 1 )
 position = Vector2( 163, -415 )
 shape = SubResource( 4 )
 
@@ -77,3 +80,6 @@ margin_top = -288.0
 margin_right = 252.0
 margin_bottom = -2.0
 color = Color( 1, 0, 0, 1 )
+
+[node name="BodyInterpreter" type="Node" parent="."]
+script = ExtResource( 2 )
