@@ -3,14 +3,15 @@ extends Node
 var tiltHead = "Neutral"
 var tiltPositions = ["Right", "Neutral", "Left"]
 var tiltHeadRaw = 0
+var tiltHeadNormalised = 0
 
 var pitchHead = "Neutral"
 var pitchPositions = ["Up", "Neutral", "Down"]
 var pitchHeadLeftEar = 0
 var pitchHeadRightEar = 0
 
-var mouthOpen = "Closed"
-var mouthPositions = ["Closed", "Open"]
+var mouthOpen = false
+var mouthOpenNormalised = 0
 var mouthOpenRaw = 0
 
 var faceLandMarks = {}
@@ -24,6 +25,9 @@ func discreetTilt(rawTilt):
 	else:
 		return 0
 		
+func normaliseTilt(rawTilt):
+	return clamp(rawTilt / 30, -1, 1)
+		
 # -1 = up, 0 = neutral, 1 down
 func discreetPitch(rawPitch):
 	
@@ -33,21 +37,15 @@ func discreetPitch(rawPitch):
 		return 1
 	else:
 		return 0
-	"""
-	if (rawPitch > 0):
-		return -1
-	elif (rawPitch > -70):
-		return 1
-	else:
-		return 0
-	"""
 		
-# 0 = closed, 1 = open
 func discreetMouth(rawMouth):
 	if (rawMouth < 40):
-		return 0
+		return false
 	else:
-		return 1
+		return true
+		
+func normaliseMouth(rawMouth):
+	return clamp(rawMouth/100, 0, 1)
 
 func createLandmarks(faceData):
 	var allLandmarks = faceData.result["DATA"]["landmark"]
@@ -64,14 +62,14 @@ func createLandmarks(faceData):
 func extractVector2(landmark):
 	return Vector2(landmark["x"], landmark["y"])
 
-func isMouthOpen(faceLandMarks):
-	var vectorLeftMothToLip = faceLandMarks["bottumLip"]-faceLandMarks["topLip"]
+func isMouthOpen():
+	#var vectorLeftMothToLip = faceLandMarks["bottumLip"]-faceLandMarks["topLip"]
 	#print(str(vectorLeftMothToLip.length()))
 	var topLip = faceLandMarks["topLip"]-faceLandMarks["leftMouth"]
 	var buttomLip = faceLandMarks["bottumLip"]-faceLandMarks["leftMouth"]
 	mouthOpenRaw = rad2deg(topLip.angle_to(buttomLip))
 	
-func headPitch(faceLandMarks):
+func headPitch():
 	"""
 	var vectorEarToEar = faceLandMarks["leftEar"]-faceLandMarks["rightEar"]
 	var vectorEarToNose = faceLandMarks["leftEar"]-faceLandMarks["noseTip"]
@@ -84,7 +82,7 @@ func headPitch(faceLandMarks):
 	pitchHeadLeftEar = rad2deg(vectorNoseLeftEar.angle_to(vectorBetweenEars))
 	pitchHeadRightEar = -rad2deg(vectorNoseRightEar.angle_to(-vectorBetweenEars))
 	
-func headTilt(faceLandMarks):
+func headTilt():
 	var vectorTopToButtomHead = faceLandMarks["topHead"]-faceLandMarks["bottomHead"]
 	tiltHeadRaw = rad2deg(vectorTopToButtomHead.angle_to(Vector2.UP))
 
@@ -96,12 +94,14 @@ func toString():
 func interpretData(dict):
 	createLandmarks(dict)
 
-	isMouthOpen(faceLandMarks)
-	headPitch(faceLandMarks)
-	headTilt(faceLandMarks)
+	isMouthOpen()
+	headPitch()
+	headTilt()
 	
 	tiltHead = tiltPositions[discreetTilt(tiltHeadRaw) + 1]
-	mouthOpen = mouthPositions[discreetMouth(mouthOpenRaw)]
+	tiltHeadNormalised = normaliseTilt(tiltHeadRaw)
+	mouthOpen = discreetMouth(mouthOpenRaw)
+	mouthOpenNormalised = normaliseMouth(mouthOpenRaw)
 	
 	var pitch = discreetPitch(pitchHeadLeftEar)
 	if (pitch == discreetPitch(pitchHeadRightEar)):
