@@ -42,3 +42,11 @@ func _on_data_recieved():
 	
 	interpreter.interpretData(dict)
 	
+
+
+	
+
+
+func _on_HelpButton_pressed():
+	$HelpPopup.popup(Rect2(0,0,10,10))
+	
