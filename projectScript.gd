@@ -24,14 +24,28 @@ func _process(_delta):
 	client.poll()
 	match (gameState):
 		State.AIMING:
+			$ArrowBody.visible= true
 			if (interpreter.mouthOpen):
 				angle = Vector2.UP.rotated(deg2rad(maxAngle * -interpreter.tiltHeadNormalised))
 				print(angle)
 				gameState = State.SHOOTING
+			"""Rotates the arrow around the ball, and points the 
+			arrow in the direction of the head"""
+			var distance = 40
+			var angle = deg2rad(maxAngle * -interpreter.tiltHeadNormalised) - PI/2
+			$ArrowBody.position = $BallBody.position + Vector2(cos(angle), sin(angle)) * distance
+			var ballToArrow = $ArrowBody.position-$BallBody.position
+			$ArrowBody.rotation = -interpreter.tiltHeadNormalised
+			
+			$ArrowBody.scale.y = 1+interpreter.mouthOpenNormalised
+			
+		
 		State.SHOOTING:
 			if (interpreter.pitchHead == "Up"):
 				$BallBody.shoot(angle, shootingForce * interpreter.mouthOpenNormalised)
 				gameState = State.PLAYING
+				
+				$ArrowBody.visible= false
 		State.PLAYING:
 			print("Playing")
 	
