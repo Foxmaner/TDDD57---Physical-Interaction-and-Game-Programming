@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Flipper.gd" type="Script" id=1]
+
+[node name="Flipper" type="KinematicBody2D"]
+position = Vector2( 351, 304 )
+scale = Vector2( 15, 15 )
+script = ExtResource( 1 )
+startRotation = 160.0
+maxAngle = 180.0
+isClockwise = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( -5, 0, 0, 5, 25, 0, 0, -5 )
+
+[node name="Graphic" type="Node2D" parent="."]
+visible = false
+position = Vector2( 7, -6 )
+
+[node name="ColorRect3" type="ColorRect" parent="Graphic"]
+margin_left = 15.0
+margin_top = 3.0
+margin_right = 21.0
+margin_bottom = 7.0
+rect_rotation = 43.7546
+rect_scale = Vector2( 0.744887, 1 )
+
+[node name="ColorRect2" type="ColorRect" parent="Graphic"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 9.0
+rect_rotation = 43.7546
+rect_scale = Vector2( 0.621552, 0.939384 )
+
+[node name="ColorRect" type="ColorRect" parent="Graphic"]
+margin_left = -7.0
+margin_top = -1.0
+margin_right = 7.0
+margin_bottom = 9.0
+rect_rotation = 43.7546
+rect_scale = Vector2( 0.744887, 1 )
+
+[node name="ColorRect4" type="ColorRect" parent="Graphic"]
+margin_right = 14.0
+margin_bottom = 9.0
+rect_rotation = 43.7546
+rect_scale = Vector2( 0.621552, 0.939384 )
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( -5, 0, 0, 5, 25, 0, 0, -5 )
