@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://projectScript.gd" type="Script" id=1]
 [ext_resource path="res://BodyInterpreter.gd" type="Script" id=2]
 [ext_resource path="res://BallBody.gd" type="Script" id=3]
 [ext_resource path="res://pics/arrow.png" type="Texture" id=4]
 [ext_resource path="res://Flipper.tscn" type="PackedScene" id=5]
+[ext_resource path="res://FaceNode.gd" type="Script" id=6]
 
 [sub_resource type="PhysicsMaterial" id=2]
 
@@ -109,5 +110,9 @@ texture = ExtResource( 4 )
 position = Vector2( 370, 489 )
 startRotation = 0.0
 maxAngle = 45.0
+
+[node name="FaceNode" type="Node2D" parent="."]
+position = Vector2( 818, 299 )
+script = ExtResource( 6 )
 
 [connection signal="pressed" from="HelpButton" to="." method="_on_HelpButton_pressed"]

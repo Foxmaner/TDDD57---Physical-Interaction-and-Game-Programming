@@ -16,6 +16,8 @@ var mouthOpenRaw = 0
 
 var faceLandMarks = {}
 
+var rawFace = []
+
 # -1 = right, 0 = neutral, 1 left
 func discreetTilt(rawTilt):
 	if (rawTilt < -10):
@@ -58,6 +60,11 @@ func createLandmarks(faceData):
 	faceLandMarks["rightEar"] = extractVector2(allLandmarks[454])
 	faceLandMarks["leftEar"] = extractVector2(allLandmarks[234])
 	faceLandMarks["noseTip"] = extractVector2(allLandmarks[94])
+	
+	rawFace.clear()
+	for i in allLandmarks:
+		rawFace.append(extractVector2(i))
+	
 	
 func extractVector2(landmark):
 	return Vector2(landmark["x"], landmark["y"])
