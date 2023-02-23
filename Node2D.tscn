@@ -105,3 +105,40 @@ scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 4 )
 
 [connection signal="pressed" from="HelpButton" to="." method="_on_HelpButton_pressed"]
+[node name="Flipper" type="KinematicBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Flipper"]
+polygon = PoolVector2Array( -5, 0, 0, 5, 25, 0, 0, -5 )
+
+[node name="Graphic" type="Node2D" parent="Flipper"]
+position = Vector2( 7, -6 )
+
+[node name="ColorRect3" type="ColorRect" parent="Flipper/Graphic"]
+margin_left = 15.0
+margin_top = 3.0
+margin_right = 21.0
+margin_bottom = 7.0
+rect_rotation = 43.7546
+rect_scale = Vector2( 0.744887, 1 )
+
+[node name="ColorRect2" type="ColorRect" parent="Flipper/Graphic"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 9.0
+rect_rotation = 43.7546
+rect_scale = Vector2( 0.621552, 0.939384 )
+
+[node name="ColorRect" type="ColorRect" parent="Flipper/Graphic"]
+margin_left = -7.0
+margin_top = -1.0
+margin_right = 7.0
+margin_bottom = 9.0
+rect_rotation = 43.7546
+rect_scale = Vector2( 0.744887, 1 )
+
+[node name="ColorRect4" type="ColorRect" parent="Flipper/Graphic"]
+margin_right = 14.0
+margin_bottom = 9.0
+rect_rotation = 43.7546
+rect_scale = Vector2( 0.621552, 0.939384 )
