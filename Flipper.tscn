@@ -3,8 +3,7 @@
 [ext_resource path="res://Flipper.gd" type="Script" id=1]
 
 [node name="Flipper" type="KinematicBody2D"]
-position = Vector2( 351, 304 )
-scale = Vector2( 15, 15 )
+scale = Vector2( 7.2, 3.4 )
 script = ExtResource( 1 )
 startRotation = 160.0
 maxAngle = 180.0
