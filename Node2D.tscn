@@ -55,9 +55,10 @@ margin_bottom = 86.0
 text = "Help"
 
 [node name="ArrowBody" type="StaticBody2D" parent="."]
-position = Vector2( 507, 426 )
+position = Vector2( 507, 444 )
 
 [node name="ArrowSprite" type="Sprite" parent="ArrowBody"]
+position = Vector2( 0, -25 )
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 4 )
 
