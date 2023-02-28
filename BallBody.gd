@@ -10,6 +10,4 @@ func shoot(dir, force):
 
 func _draw():
 	var radius = get_node("CollisionShape2D").shape.radius
-	print(radius)
-	print(position)
 	draw_circle(Vector2(0,0), radius, Color.red)

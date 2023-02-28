@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="PhysicsMaterial" id=1]
+bounce = 1.0
+
+[node name="WallsBody" type="StaticBody2D"]
+position = Vector2( 364, 0 )
+rotation = 1.5708
+physics_material_override = SubResource( 1 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+visible = false
+build_mode = 1
+polygon = PoolVector2Array( 0, 0, 500, 0, 500, -300, 0, -300 )
+
+[node name="WallsGraphic" type="Node2D" parent="."]
+
+[node name="Left" type="ColorRect" parent="WallsGraphic"]
+margin_right = 500.0
+margin_bottom = 5.0
+color = Color( 1, 0, 0, 1 )
+
+[node name="Up" type="ColorRect" parent="WallsGraphic"]
+visible = false
+margin_top = -300.0
+margin_right = 5.0
+color = Color( 1, 0, 0, 1 )
+
+[node name="Right" type="ColorRect" parent="WallsGraphic"]
+margin_top = -300.0
+margin_right = 500.0
+margin_bottom = -295.0
+color = Color( 1, 0, 0, 1 )
+
+[node name="Bottom" type="ColorRect" parent="WallsGraphic"]
+margin_left = 500.0
+margin_top = -300.0
+margin_right = 505.0
+color = Color( 1, 0, 0, 1 )
