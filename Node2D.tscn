@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://projectScript.gd" type="Script" id=1]
 [ext_resource path="res://BodyInterpreter.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Walls.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Ball.tscn" type="PackedScene" id=8]
 [ext_resource path="res://FaceNode.gd" type="Script" id=9]
+[ext_resource path="res://gameStateText.gd" type="Script" id=10]
 
 [sub_resource type="PhysicsMaterial" id=2]
 
@@ -110,5 +111,26 @@ rotation = -1.57079
 [node name="FaceNode" type="Node2D" parent="."]
 position = Vector2( 818, 299 )
 script = ExtResource( 9 )
+
+[node name="gameStateText" type="Node2D" parent="."]
+position = Vector2( 213, 25 )
+script = ExtResource( 10 )
+
+[node name="playText" type="RichTextLabel" parent="gameStateText"]
+margin_top = 40.0
+margin_right = 60.0
+margin_bottom = 103.0
+text = "PLAYING"
+
+[node name="shootText" type="RichTextLabel" parent="gameStateText"]
+margin_top = 20.0
+margin_right = 74.0
+margin_bottom = 61.0
+text = "SHOOTING"
+
+[node name="sightText" type="RichTextLabel" parent="gameStateText"]
+margin_right = 65.0
+margin_bottom = 46.0
+text = "AIMING"
 
 [connection signal="pressed" from="HelpButton" to="." method="_on_HelpButton_pressed"]

@@ -4,6 +4,7 @@ var url = "ws://localhost:5000"
 
 onready var interpreter = get_node("BodyInterpreter")
 onready var faceNode = get_node("FaceNode")
+onready var gameStateTexts = get_node("gameStateText")
 
 enum State {DEFAULT, AIMING, SHOOTING, PLAYING}
 var gameState = State.AIMING
@@ -31,7 +32,6 @@ func _process(_delta):
 		print(totalScore)
 
 	faceNode.update()
-	
 	match (gameState):
 		State.AIMING:
 			$ArrowBody.visible= true
@@ -39,6 +39,7 @@ func _process(_delta):
 				angle = Vector2.UP.rotated(deg2rad(maxAngle * -interpreter.tiltHeadNormalised))
 				print(angle)
 				gameState = State.SHOOTING
+				gameStateTexts.changeState(gameState)
 			"""Rotates the arrow around the ball, and points the 
 			arrow in the direction of the head"""
 			var distance = 40
@@ -47,18 +48,19 @@ func _process(_delta):
 			var ballToArrow = $ArrowBody.position-$BallBody.position
 			$ArrowBody.rotation = -interpreter.tiltHeadNormalised
 			
-			$ArrowBody.scale.y = 1+interpreter.mouthOpenNormalised
+			
 			
 		
 		State.SHOOTING:
 			if (interpreter.pitchHead == "Up"):
 				$BallBody.shoot(angle, shootingForce * interpreter.mouthOpenNormalised)
 				gameState = State.PLAYING
+				gameStateTexts.changeState(gameState)
+			$ArrowBody.scale.y = 1+interpreter.mouthOpenNormalised
 				
-				$ArrowBody.visible= false
 		State.PLAYING:
 			print("Playing")
-	
+			$ArrowBody.visible= false
 
 func _on_data_recieved(): 
 	var payload = client.get_peer(1).get_packet().get_string_from_utf8()

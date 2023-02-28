@@ -30,7 +30,7 @@ func _draw():
 	if(interpreter.rawFace.empty()==false):
 		#Draw Face
 		var radius = 1
-		print(interpreter.rawFace.size())
+		
 		var norm = interpreter.rawFace[10].distance_to(interpreter.rawFace[152])
 		for i in interpreter.rawFace:
 			draw_circle((((i-interpreter.rawFace[0])*200)/norm), radius, Color.green)
