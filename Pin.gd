@@ -19,4 +19,3 @@ func _on_Hitbox_body_entered(body):
 	var groups = body.get_groups()
 	if (groups.has("balls")):
 		score += points
-		print(score)

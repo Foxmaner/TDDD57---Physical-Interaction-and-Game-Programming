@@ -22,10 +22,11 @@ func _ready():
 		
 func _process(_delta):
 	client.poll()
-	var totalScore = 0
-	for pin in get_tree().get_nodes_in_group("pins"):
-		totalScore += pin.score
-	print(totalScore)
+	if Input.is_key_pressed(KEY_W):
+		var totalScore = 0
+		for pin in get_tree().get_nodes_in_group("pins"):
+			totalScore += pin.score
+		print(totalScore)
 	match (gameState):
 		State.AIMING:
 			$ArrowBody.visible= true
