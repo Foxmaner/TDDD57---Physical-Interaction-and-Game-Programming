@@ -3,6 +3,7 @@ var client = WebSocketClient.new()
 var url = "ws://localhost:5000"
 
 onready var interpreter = get_node("BodyInterpreter")
+onready var faceNode = get_node("FaceNode")
 
 enum State {DEFAULT, AIMING, SHOOTING, PLAYING}
 var gameState = State.AIMING
@@ -22,11 +23,15 @@ func _ready():
 		
 func _process(_delta):
 	client.poll()
+
 	if Input.is_key_pressed(KEY_W):
 		var totalScore = 0
 		for pin in get_tree().get_nodes_in_group("pins"):
 			totalScore += pin.score
 		print(totalScore)
+
+	faceNode.update()
+	
 	match (gameState):
 		State.AIMING:
 			$ArrowBody.visible= true
@@ -60,6 +65,7 @@ func _on_data_recieved():
 	var dict = JSON.parse(payload)
 	
 	interpreter.interpretData(dict)
+	
 	
 
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://projectScript.gd" type="Script" id=1]
 [ext_resource path="res://BodyInterpreter.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Pin.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Walls.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Ball.tscn" type="PackedScene" id=8]
+[ext_resource path="res://FaceNode.gd" type="Script" id=9]
 
 [sub_resource type="PhysicsMaterial" id=2]
 
@@ -105,5 +106,9 @@ rotation = 1.448e-05
 [node name="Pin8" parent="Pins" instance=ExtResource( 6 )]
 position = Vector2( 434, 182 )
 rotation = -1.57079
+
+[node name="FaceNode" type="Node2D" parent="."]
+position = Vector2( 818, 299 )
+script = ExtResource( 9 )
 
 [connection signal="pressed" from="HelpButton" to="." method="_on_HelpButton_pressed"]
