@@ -62,9 +62,19 @@ position = Vector2( 0, -25 )
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 4 )
 
-[node name="Flipper" parent="." instance=ExtResource( 5 )]
-position = Vector2( 370, 489 )
-startRotation = 0.0
+[node name="rightFlipper" parent="." instance=ExtResource( 5 )]
+position = Vector2( 670, 480 )
+rotation = 2.61799
+scale = Vector2( 6.5, 3.4 )
+startRotation = 150.0
+maxAngle = 45.0
+isClockwise = true
+
+[node name="leftFlipper" parent="." instance=ExtResource( 5 )]
+position = Vector2( 350, 480 )
+rotation = 0.523599
+scale = Vector2( 6.5, 3.4 )
+startRotation = 30.0
 maxAngle = 45.0
 
 [node name="BallBody" parent="." instance=ExtResource( 8 )]

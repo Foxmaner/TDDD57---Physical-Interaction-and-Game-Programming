@@ -9,15 +9,15 @@ rotation = 1.5708
 physics_material_override = SubResource( 1 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-visible = false
 build_mode = 1
-polygon = PoolVector2Array( 0, 0, 500, 0, 500, -300, 0, -300 )
+polygon = PoolVector2Array( 0, 0, 596, 1.99783, 595.999, -299.002, 490.819, -300, 0, -300 )
 
 [node name="WallsGraphic" type="Node2D" parent="."]
 
 [node name="Left" type="ColorRect" parent="WallsGraphic"]
-margin_right = 500.0
-margin_bottom = 5.0
+margin_right = 594.0
+margin_bottom = 6.0
+rect_pivot_offset = Vector2( 487.995, -130.599 )
 color = Color( 1, 0, 0, 1 )
 
 [node name="Up" type="ColorRect" parent="WallsGraphic"]
@@ -28,12 +28,13 @@ color = Color( 1, 0, 0, 1 )
 
 [node name="Right" type="ColorRect" parent="WallsGraphic"]
 margin_top = -300.0
-margin_right = 500.0
-margin_bottom = -295.0
+margin_right = 595.0
+margin_bottom = -294.0
 color = Color( 1, 0, 0, 1 )
 
 [node name="Bottom" type="ColorRect" parent="WallsGraphic"]
-margin_left = 500.0
-margin_top = -300.0
-margin_right = 505.0
+margin_left = 590.999
+margin_top = -298.002
+margin_right = 595.999
+margin_bottom = 1.99786
 color = Color( 1, 0, 0, 1 )

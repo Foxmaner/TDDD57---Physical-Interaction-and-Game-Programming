@@ -9,6 +9,8 @@ export var startRotation = 0.0
 export var maxAngle = 90.0
 export var isClockwise = true
 
+onready var interpreter = get_node("../BodyInterpreter")
+
 onready var currentSpeed = hitSpeed
 var currentState = State.IDLE
 
@@ -24,8 +26,16 @@ func spin(newDirection):
 	currentState = State.SPINNING
 
 func _process(delta):
+	var headTilt = interpreter.tiltHeadNormalised
+	if(headTilt<-0.5):
+		if isClockwise:
+			currentState = State.HITTING
+	elif(headTilt>0.5):
+		if !isClockwise:
+			currentState = State.HITTING
 	if Input.is_key_pressed(KEY_SPACE):
-		currentState = State.HITTING
+		if isClockwise:
+			currentState = State.HITTING
 	match (currentState):
 		State.IDLE:
 			return
