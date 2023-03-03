@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://projectScript.gd" type="Script" id=1]
 [ext_resource path="res://BodyInterpreter.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://Ball.tscn" type="PackedScene" id=8]
 [ext_resource path="res://FaceNode.gd" type="Script" id=9]
 [ext_resource path="res://gameStateText.gd" type="Script" id=10]
+[ext_resource path="res://ScoreText.tscn" type="PackedScene" id=11]
 
 [sub_resource type="PhysicsMaterial" id=2]
 
@@ -143,5 +144,8 @@ text = "SHOOTING"
 margin_right = 65.0
 margin_bottom = 46.0
 text = "AIMING"
+
+[node name="ScoreText" parent="." instance=ExtResource( 11 )]
+position = Vector2( 91, 25 )
 
 [connection signal="pressed" from="HelpButton" to="." method="_on_HelpButton_pressed"]

@@ -13,6 +13,12 @@ const shootingForce = 300
 const maxAngle = 50
 
 var angle = Vector2.UP
+var currentScore = 0
+var highScore = 0
+
+var savegame = File.new() #file
+var save_path = "user://savegame.save" #place of the file
+var save_data = {"highscore": 0} #variable to store data
 
 func _ready():
 	client.connect("data_received", self, "_on_data_recieved")
@@ -21,15 +27,17 @@ func _ready():
 	if err != OK:
 		set_process(false)
 		print("Unable to connect")
+	
+	if not savegame.file_exists(save_path):
+		create_save()
+	highScore = read_highscore()
+	$ScoreText.update_values(currentScore, highScore)
 		
 func _process(_delta):
 	client.poll()
 
 	if Input.is_key_pressed(KEY_W):
-		var totalScore = 0
-		for pin in get_tree().get_nodes_in_group("pins"):
-			totalScore += pin.score
-		print(totalScore)
+		save_highscore()
 
 	faceNode.update()
 	match (gameState):
@@ -59,8 +67,15 @@ func _process(_delta):
 			$ArrowBody.scale.y = 1+interpreter.mouthOpenNormalised
 				
 		State.PLAYING:
-			print("Playing")
 			$ArrowBody.visible= false
+	var totalScore = 0
+	for pin in get_tree().get_nodes_in_group("pins"):
+		totalScore += pin.score
+	if totalScore != currentScore:
+		currentScore = totalScore
+		highScore = max(currentScore, highScore)
+		$ScoreText.update_values(currentScore, highScore)
+
 
 func _on_data_recieved(): 
 	var payload = client.get_peer(1).get_packet().get_string_from_utf8()
@@ -69,9 +84,24 @@ func _on_data_recieved():
 	interpreter.interpretData(dict)
 	
 	
-
-
+func create_save():
+	savegame.open(save_path, File.WRITE)
+	savegame.store_var(save_data)
+	savegame.close()
 	
+	
+func save_highscore():
+	save_data["highscore"] = highScore
+	savegame.open(save_path, File.WRITE)
+	savegame.store_var(save_data)
+	savegame.close()
+	
+
+func read_highscore():
+	savegame.open(save_path, File.READ)
+	save_data = savegame.get_var()
+	savegame.close()
+	return save_data["highscore"]	
 
 
 func _on_HelpButton_pressed():
