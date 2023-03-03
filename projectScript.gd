@@ -59,7 +59,6 @@ func _process(_delta):
 			$ArrowBody.scale.y = 1+interpreter.mouthOpenNormalised
 				
 		State.PLAYING:
-			print("Playing")
 			$ArrowBody.visible= false
 
 func _on_data_recieved(): 
@@ -76,4 +75,13 @@ func _on_data_recieved():
 
 func _on_HelpButton_pressed():
 	$HelpPopup.popup(Rect2(0,0,10,10))
+	
+
+
+func _on_DropZone_body_entered(body):
+	var groups = body.get_groups()
+	if (groups.has("balls")):
+		body.reset = true
+		gameStateTexts.changeState(gameState)
+		gameState = State.AIMING
 	

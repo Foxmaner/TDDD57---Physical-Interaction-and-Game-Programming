@@ -1,8 +1,7 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://projectScript.gd" type="Script" id=1]
 [ext_resource path="res://BodyInterpreter.gd" type="Script" id=2]
-[ext_resource path="res://BallBody.gd" type="Script" id=3]
 [ext_resource path="res://pics/arrow.png" type="Texture" id=4]
 [ext_resource path="res://Flipper.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Pin.tscn" type="PackedScene" id=6]
@@ -11,10 +10,8 @@
 [ext_resource path="res://FaceNode.gd" type="Script" id=9]
 [ext_resource path="res://gameStateText.gd" type="Script" id=10]
 
-[sub_resource type="PhysicsMaterial" id=2]
-
-[sub_resource type="CircleShape2D" id=1]
-radius = 10.2956
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 150, 10 )
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 1 )
@@ -79,15 +76,6 @@ maxAngle = 45.0
 
 [node name="BallBody" parent="." instance=ExtResource( 8 )]
 
-[node name="Testball" type="RigidBody2D" parent="." groups=["balls"]]
-position = Vector2( 499, 164 )
-rotation = -3.14159
-physics_material_override = SubResource( 2 )
-script = ExtResource( 3 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Testball"]
-shape = SubResource( 1 )
-
 [node name="Pins" type="Node" parent="."]
 
 [node name="Pin" parent="Pins" instance=ExtResource( 6 )]
@@ -144,4 +132,12 @@ margin_right = 65.0
 margin_bottom = 46.0
 text = "AIMING"
 
+[node name="DropZone" type="Area2D" parent="."]
+position = Vector2( 374, 581 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DropZone"]
+position = Vector2( 138, 2 )
+shape = SubResource( 3 )
+
 [connection signal="pressed" from="HelpButton" to="." method="_on_HelpButton_pressed"]
+[connection signal="body_entered" from="DropZone" to="." method="_on_DropZone_body_entered"]
