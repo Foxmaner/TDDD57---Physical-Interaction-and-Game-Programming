@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://projectScript.gd" type="Script" id=1]
 [ext_resource path="res://BodyInterpreter.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Ball.tscn" type="PackedScene" id=8]
 [ext_resource path="res://FaceNode.gd" type="Script" id=9]
 [ext_resource path="res://gameStateText.gd" type="Script" id=10]
+[ext_resource path="res://ScoreText.tscn" type="PackedScene" id=11]
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 150, 10 )
@@ -138,6 +139,9 @@ position = Vector2( 374, 581 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DropZone"]
 position = Vector2( 138, 2 )
 shape = SubResource( 3 )
+
+[node name="ScoreText" parent="." instance=ExtResource( 11 )]
+position = Vector2( 91, 25 )
 
 [connection signal="pressed" from="HelpButton" to="." method="_on_HelpButton_pressed"]
 [connection signal="body_entered" from="DropZone" to="." method="_on_DropZone_body_entered"]
