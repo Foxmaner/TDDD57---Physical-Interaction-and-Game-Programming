@@ -13,7 +13,7 @@ func _ready():
 	
 	pass # Replace with function body.
 
-func draw_circle_arc(center, radius, angle_from, angle_to, color):
+func draw_circle_arc(center, radius, angle_from, angle_to, color, width):
 	var nb_points = 32
 	var points_arc = PoolVector2Array()
 
@@ -22,7 +22,8 @@ func draw_circle_arc(center, radius, angle_from, angle_to, color):
 		points_arc.push_back(center + Vector2(cos(angle_point), sin(angle_point)) * radius)
 
 	for index_point in range(nb_points):
-		draw_line(points_arc[index_point], points_arc[index_point + 1], color, 5)
+		draw_line(points_arc[index_point], points_arc[index_point + 1], color, width)
+		
 		
 
 func _draw():
@@ -38,8 +39,8 @@ func _draw():
 		
 		#Draw tilt indicator
 		var headTilt = interpreter.tiltHeadNormalised
-		var center = (interpreter.rawFace[10]-interpreter.rawFace[0])*600+(Vector2(0,0))
 		var arcRadius = 100
+		var center = (interpreter.rawFace[10]+(Vector2(0,-1)*arcRadius))
 		var angle_from = 0
 		var angle_to = 0
 		if(headTilt>0):
@@ -49,7 +50,10 @@ func _draw():
 			angle_from = 0
 			angle_to = -(100*headTilt)
 		var color = Color(1.0, 1.0-abs(headTilt), 1.0-abs(headTilt))
-		draw_circle_arc(center, arcRadius, angle_from, angle_to, color)
+		draw_circle_arc(center, arcRadius, angle_from, angle_to, color, 5)
+		
+		draw_circle_arc(center, arcRadius-4, -50, 50, Color.white, 1)
+		draw_circle_arc(center, arcRadius+4, -50, 50, Color.white, 1)
 		
 		#Draw mouth indicator
 		var mouthOpenNormalised = interpreter.mouthOpenNormalised
@@ -57,6 +61,7 @@ func _draw():
 		var mouthButtom = (interpreter.rawFace[15]-interpreter.rawFace[0])*600
 		var mouthBallColor = Color(1.0, 1.0-abs(mouthOpenNormalised), 1.0-abs(mouthOpenNormalised))
 		draw_circle((mouthButtom+mouthTop)/2, 15*mouthOpenNormalised, mouthBallColor)
+		draw_circle_arc((mouthButtom+mouthTop)/2, 15, 0, 359, Color.white, 1)
 		
 		
 	
