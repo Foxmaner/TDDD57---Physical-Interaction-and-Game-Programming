@@ -113,9 +113,12 @@ func _on_HelpButton_pressed():
 
 
 func _on_DropZone_body_entered(body):
+	
 	var groups = body.get_groups()
 	if (groups.has("balls")):
+		get_tree().reload_current_scene()
+		"""
 		body.reset = true
 		gameStateTexts.changeState(gameState)
-		gameState = State.AIMING
+		gameState = State.AIMING"""
 	

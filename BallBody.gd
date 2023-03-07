@@ -20,4 +20,4 @@ func _integrate_forces (state):
 		state.linear_velocity = Vector2()
 		mode = RigidBody2D.MODE_KINEMATIC
 		reset = false
-	
+
