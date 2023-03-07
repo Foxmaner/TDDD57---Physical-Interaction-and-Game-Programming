@@ -56,9 +56,6 @@ func _process(_delta):
 			var ballToArrow = $ArrowBody.position-$BallBody.position
 			$ArrowBody.rotation = -interpreter.tiltHeadNormalised
 			
-			
-			
-		
 		State.SHOOTING:
 			if (interpreter.pitchHead == "Up"):
 				$BallBody.shoot(angle, shootingForce * interpreter.mouthOpenNormalised)
@@ -68,6 +65,12 @@ func _process(_delta):
 				
 		State.PLAYING:
 			$ArrowBody.visible= false
+			var headTilt = interpreter.tiltHeadNormalised
+			if(headTilt<-0.5):
+				$rightFlipper.activate_flipper()
+			elif(headTilt>0.5):
+				$leftFlipper.activate_flipper()
+				
 	var totalScore = 0
 	for pin in get_tree().get_nodes_in_group("pins"):
 		totalScore += pin.score
