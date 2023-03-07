@@ -45,7 +45,6 @@ func _process(_delta):
 			$ArrowBody.visible= true
 			if (interpreter.mouthOpen):
 				angle = Vector2.UP.rotated(deg2rad(maxAngle * -interpreter.tiltHeadNormalised))
-				print(angle)
 				gameState = State.SHOOTING
 				gameStateTexts.changeState(gameState)
 			"""Rotates the arrow around the ball, and points the 
@@ -61,10 +60,10 @@ func _process(_delta):
 				$BallBody.shoot(angle, shootingForce * interpreter.mouthOpenNormalised)
 				gameState = State.PLAYING
 				gameStateTexts.changeState(gameState)
+				$ArrowBody.visible = false
 			$ArrowBody.scale.y = 1+interpreter.mouthOpenNormalised
 				
 		State.PLAYING:
-			$ArrowBody.visible= false
 			var headTilt = interpreter.tiltHeadNormalised
 			if(headTilt<-0.5):
 				$rightFlipper.activate_flipper()
@@ -111,14 +110,10 @@ func _on_HelpButton_pressed():
 	$HelpPopup.popup(Rect2(0,0,10,10))
 	
 
-
 func _on_DropZone_body_entered(body):
 	
 	var groups = body.get_groups()
 	if (groups.has("balls")):
+		save_highscore()
 		get_tree().reload_current_scene()
-		"""
-		body.reset = true
-		gameStateTexts.changeState(gameState)
-		gameState = State.AIMING"""
 	

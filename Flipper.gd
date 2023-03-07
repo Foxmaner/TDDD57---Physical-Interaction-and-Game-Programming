@@ -13,7 +13,7 @@ onready var currentSpeed = hitSpeed
 var currentState = State.IDLE
 
 func _ready():
-	print("Rotation = %s" % [startRotation])
+	#print("Rotation = %s" % [startRotation])
 	rotation = deg2rad(startRotation)
 	if (isClockwise):
 		returnSpeed = -returnSpeed
