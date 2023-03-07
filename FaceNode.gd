@@ -60,8 +60,8 @@ func _draw():
 		var mouthTop = (interpreter.rawFace[12]-interpreter.rawFace[0])*600
 		var mouthButtom = (interpreter.rawFace[15]-interpreter.rawFace[0])*600
 		var mouthBallColor = Color(1.0, 1.0-abs(mouthOpenNormalised), 1.0-abs(mouthOpenNormalised))
-		draw_circle((mouthButtom+mouthTop)/2, 15*mouthOpenNormalised, mouthBallColor)
-		draw_circle_arc((mouthButtom+mouthTop)/2, 15, 0, 359, Color.white, 1)
+		draw_circle((mouthButtom-mouthTop)/2, 15*mouthOpenNormalised, mouthBallColor)
+		draw_circle_arc((mouthButtom-mouthTop)/2, 15, 0, 359, Color.white, 1)
 		
 		
 	
