@@ -56,7 +56,7 @@ func _draw():
 		draw_circle_arc(center, arcRadius+4, -50, 50, Color.white, 1)
 		
 		#Draw mouth indicator
-		var mouthOpenNormalised = interpreter.mouthOpenNormalised
+		var mouthOpenNormalised = interpreter.mouthOpenNormalisedSmoothed
 		var mouthTop = (interpreter.rawFace[12]-interpreter.rawFace[0])*600
 		var mouthButtom = (interpreter.rawFace[15]-interpreter.rawFace[0])*600
 		var mouthBallColor = Color(1.0, 1.0-abs(mouthOpenNormalised), 1.0-abs(mouthOpenNormalised))

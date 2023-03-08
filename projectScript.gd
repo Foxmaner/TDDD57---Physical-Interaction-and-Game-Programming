@@ -20,6 +20,7 @@ var savegame = File.new() #file
 var save_path = "user://savegame.save" #place of the file
 var save_data = {"highscore": 0} #variable to store data
 
+
 func _ready():
 	client.connect("data_received", self, "_on_data_recieved")
 	
@@ -57,11 +58,12 @@ func _process(_delta):
 			
 		State.SHOOTING:
 			if (interpreter.pitchHead == "Up"):
-				$BallBody.shoot(angle, shootingForce * interpreter.mouthOpenNormalised)
+				#print(interpreter.mouthOpenNormalised)
+				$BallBody.shoot(angle, shootingForce * interpreter.mouthOpenNormalisedSmoothed)
 				gameState = State.PLAYING
 				gameStateTexts.changeState(gameState)
 				$ArrowBody.visible = false
-			$ArrowBody.scale.y = 1+interpreter.mouthOpenNormalised
+			$ArrowBody.scale.y = 1+interpreter.mouthOpenNormalisedSmoothed
 				
 		State.PLAYING:
 			var headTilt = interpreter.tiltHeadNormalised

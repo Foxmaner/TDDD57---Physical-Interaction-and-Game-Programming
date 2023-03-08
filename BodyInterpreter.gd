@@ -14,6 +14,9 @@ var mouthOpen = false
 var mouthOpenNormalised = 0
 var mouthOpenRaw = 0
 
+var mouthOpenNormalisedBuffer = []
+var mouthOpenNormalisedSmoothed = 0
+
 var faceLandMarks = {}
 
 var rawFace = []
@@ -47,6 +50,16 @@ func discreetMouth(rawMouth):
 		return true
 		
 func normaliseMouth(rawMouth):
+	if(mouthOpenNormalisedBuffer.size()<10):
+		mouthOpenNormalisedBuffer.push_back(clamp(rawMouth/100, 0, 1))
+	else:
+		mouthOpenNormalisedBuffer.pop_front()
+		mouthOpenNormalisedBuffer.push_back(clamp(rawMouth/100, 0, 1))
+	var total = 0
+	for i in mouthOpenNormalisedBuffer:
+		total = total + i
+	mouthOpenNormalisedSmoothed = total/mouthOpenNormalisedBuffer.size()	
+	
 	return clamp(rawMouth/100, 0, 1)
 
 func createLandmarks(faceData):
