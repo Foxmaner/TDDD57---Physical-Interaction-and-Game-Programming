@@ -11,9 +11,8 @@ var pitchHeadLeftEar = 0
 var pitchHeadRightEar = 0
 
 var mouthOpen = false
-var mouthOpenNormalised = 0
 var mouthOpenRaw = 0
-
+var mouthOpenNormalised = 0
 var mouthOpenNormalisedBuffer = []
 var mouthOpenNormalisedSmoothed = 0
 
@@ -83,18 +82,11 @@ func extractVector2(landmark):
 	return Vector2(landmark["x"], landmark["y"])
 
 func isMouthOpen():
-	#var vectorLeftMothToLip = faceLandMarks["bottumLip"]-faceLandMarks["topLip"]
-	#print(str(vectorLeftMothToLip.length()))
-	var topLip = faceLandMarks["topLip"]-faceLandMarks["leftMouth"]
-	var buttomLip = faceLandMarks["bottumLip"]-faceLandMarks["leftMouth"]
+	var topLip = faceLandMarks["topLip"] - faceLandMarks["leftMouth"]
+	var buttomLip = faceLandMarks["bottumLip"] - faceLandMarks["leftMouth"]
 	mouthOpenRaw = rad2deg(topLip.angle_to(buttomLip))
 	
 func headPitch():
-	"""
-	var vectorEarToEar = faceLandMarks["leftEar"]-faceLandMarks["rightEar"]
-	var vectorEarToNose = faceLandMarks["leftEar"]-faceLandMarks["noseTip"]
-	pitchHeadRaw = rad2deg(vectorEarToEar.angle_to(vectorEarToNose))
-	"""
 	var vectorNoseLeftEar = faceLandMarks["leftEar"] - faceLandMarks["noseTip"]
 	var vectorNoseRightEar = faceLandMarks["rightEar"] - faceLandMarks["noseTip"]
 	var vectorBetweenEars = faceLandMarks["leftEar"] - faceLandMarks["rightEar"]

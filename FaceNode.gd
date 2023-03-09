@@ -1,17 +1,6 @@
 extends Node2D
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 onready var interpreter = get_node("../BodyInterpreter")
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	
-	
-	pass # Replace with function body.
 
 func draw_circle_arc(center, radius, angle_from, angle_to, color, width):
 	var nb_points = 32
@@ -23,11 +12,9 @@ func draw_circle_arc(center, radius, angle_from, angle_to, color, width):
 
 	for index_point in range(nb_points):
 		draw_line(points_arc[index_point], points_arc[index_point + 1], color, width)
-		
-		
+
 
 func _draw():
-	
 	if(interpreter.rawFace.empty()==false):
 		#Draw Face
 		var radius = 1
@@ -35,7 +22,6 @@ func _draw():
 		var norm = interpreter.rawFace[10].distance_to(interpreter.rawFace[152])
 		for i in interpreter.rawFace:
 			draw_circle((((i-interpreter.rawFace[0])*200)/norm), radius, Color.green)
-		
 		
 		#Draw tilt indicator
 		var headTilt = interpreter.tiltHeadNormalised
@@ -57,10 +43,10 @@ func _draw():
 		
 		#Draw mouth indicator
 		var mouthOpenNormalised = interpreter.mouthOpenNormalisedSmoothed
-		var mouthTop = (interpreter.rawFace[12]-interpreter.rawFace[0])*600
-		var mouthButtom = (interpreter.rawFace[15]-interpreter.rawFace[0])*600
-		var mouthBallColor = Color(1.0, 1.0-abs(mouthOpenNormalised), 1.0-abs(mouthOpenNormalised))
-		draw_circle((mouthButtom-mouthTop)/2, 15*mouthOpenNormalised, mouthBallColor)
+		var mouthTop = (interpreter.rawFace[12] - interpreter.rawFace[0]) * 600
+		var mouthButtom = (interpreter.rawFace[15] - interpreter.rawFace[0]) * 600
+		var mouthBallColor = Color(1.0, 1.0 - abs(mouthOpenNormalised), 1.0 - abs(mouthOpenNormalised))
+		draw_circle((mouthButtom - mouthTop)/2, 15*mouthOpenNormalised, mouthBallColor)
 		draw_circle_arc((mouthButtom-mouthTop)/2, 15, 0, 359, Color.white, 1)
 		
 		

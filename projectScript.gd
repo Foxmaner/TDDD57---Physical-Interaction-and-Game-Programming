@@ -53,7 +53,7 @@ func _process(_delta):
 			var distance = 40
 			var angle = deg2rad(maxAngle * -interpreter.tiltHeadNormalised) - PI/2
 			$ArrowBody.position = $BallBody.position + Vector2(cos(angle), sin(angle)) * distance
-			var ballToArrow = $ArrowBody.position-$BallBody.position
+			var ballToArrow = $ArrowBody.position - $BallBody.position
 			$ArrowBody.rotation = -interpreter.tiltHeadNormalised
 			
 		State.SHOOTING:
@@ -63,13 +63,13 @@ func _process(_delta):
 				gameState = State.PLAYING
 				gameStateTexts.changeState(gameState)
 				$ArrowBody.visible = false
-			$ArrowBody.scale.y = 1+interpreter.mouthOpenNormalisedSmoothed
+			$ArrowBody.scale.y = 1 + interpreter.mouthOpenNormalisedSmoothed
 				
 		State.PLAYING:
 			var headTilt = interpreter.tiltHeadNormalised
-			if(headTilt<-0.5):
+			if(headTilt < -0.5):
 				$rightFlipper.activate_flipper()
-			elif(headTilt>0.5):
+			elif(headTilt > 0.5):
 				$leftFlipper.activate_flipper()
 				
 	var totalScore = 0
@@ -86,8 +86,20 @@ func _on_data_recieved():
 	var dict = JSON.parse(payload)
 	
 	interpreter.interpretData(dict)
+
+
+func _on_HelpButton_pressed():
+	$HelpPopup.popup(Rect2(0,0,10,10))
+	
+
+func _on_DropZone_body_entered(body):
+	var groups = body.get_groups()
+	if (groups.has("balls")):
+		save_highscore()
+		get_tree().reload_current_scene()
 	
 	
+""" Save functions """
 func create_save():
 	savegame.open(save_path, File.WRITE)
 	savegame.store_var(save_data)
@@ -106,16 +118,3 @@ func read_highscore():
 	save_data = savegame.get_var()
 	savegame.close()
 	return save_data["highscore"]	
-
-
-func _on_HelpButton_pressed():
-	$HelpPopup.popup(Rect2(0,0,10,10))
-	
-
-func _on_DropZone_body_entered(body):
-	
-	var groups = body.get_groups()
-	if (groups.has("balls")):
-		save_highscore()
-		get_tree().reload_current_scene()
-	
